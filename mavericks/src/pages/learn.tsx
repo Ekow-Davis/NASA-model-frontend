@@ -136,7 +136,7 @@ export default function Learn() {
         {/* Section 6 */}
         <div className="grid md:grid-cols-2 gap-16 items-center">
           <img
-            src="https://ik.imagekit.io/ekdav/learnimg5.jpg?updatedAt=1759524914365"
+            src="https://ik.imagekit.io/ekdav/learnimg3.jpg?updatedAt=1759524914365"
             alt="Citizen science"
             className="rounded-xl shadow-[0_0_35px_12px_rgba(173,216,230,0.25)] order-2 md:order-1"
           />
