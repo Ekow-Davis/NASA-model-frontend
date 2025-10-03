@@ -59,18 +59,17 @@ export default function Navbar() {
           learn
         </Link>
         <Link
-          to="/model"
-          className="hover:text-gray-300 cursor-pointer py-2 md:py-0"
-        >
-          model
-        </Link>
-        <Link
           to="/researcher"
           className="hover:text-gray-300 cursor-pointer py-2 md:py-0"
         >
           researcher
         </Link>
-        
+        <Link
+          to="/model"
+          className="hover:text-gray-300 cursor-pointer py-2 md:py-0"
+        >
+          model
+        </Link>
       </ul>
 
       {/* Planet + NASA */}
