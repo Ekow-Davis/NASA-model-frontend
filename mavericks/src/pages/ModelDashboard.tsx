@@ -457,30 +457,7 @@ const ModelPerformanceTracking: React.FC = () => {
       <StyleInjector />
 
       {isLoading && <LoadingSpinner onComplete={() => setIsLoading(false)} />}
-      {/* Header */}
-      <header className="border-b border-gray-800">
-        <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-lg flex items-center justify-center" style={{ backgroundColor: '#0F0FBD' }}>
-              <div className="w-6 h-6 border-2 border-white rounded"></div>
-            </div>
-            <span className="text-xl font-semibold">Exoplanet AI</span>
-          </div>
-          <nav className="flex items-center gap-8">
-            <a href="#" className="text-gray-400 hover:text-white transition-colors">Overview</a>
-            <a href="#" className="text-gray-400 hover:text-white transition-colors">Data</a>
-            <a href="#" className="text-gray-400 hover:text-white transition-colors">Model</a>
-            <a href="#" className="text-gray-400 hover:text-white transition-colors">Training</a>
-            <a href="#" className="text-white font-medium">Evaluation</a>
-            <div className="w-10 h-10 rounded-full flex items-center justify-center bg-gray-800">
-              <HelpCircle size={20} />
-            </div>
-            <div className="w-10 h-10 rounded-full bg-teal-600 overflow-hidden">
-              <div className="w-full h-full flex items-center justify-center text-sm font-medium">U</div>
-            </div>
-          </nav>
-        </div>
-      </header>
+      
 
       {/* Main Content */}
       <main className="max-w-7xl mx-auto px-6 py-12">
