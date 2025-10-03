@@ -25,7 +25,7 @@ interface MainProps {
 
 const Main = ({ onPredictionComplete }: MainProps) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [formData, setFormData] = useState<FormData>({
+  const [formData, setFormData] = useState<FormData>({ 
     koi_period: null,
     koi_duration: null,
     koi_depth: null,

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import { Upload, Download, FileText, CheckCircle } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Upload, Download, FileText, CheckCircle, TrendingUpDown, ChevronsLeftRightEllipsis, Cpu } from 'lucide-react';
+import { Link, useNavigate } from 'react-router-dom';
+import ModelModal from '../components/ModelModal';
 
 interface UploadedFile {
   name: string;
@@ -37,6 +38,19 @@ const ProgressBar: React.FC<ProgressBarProps> = ({ percentage, color = '#0F0FBD'
 
 const ResearcherPage: React.FC = () => {
   const [uploadedFile, setUploadedFile] = useState<UploadedFile | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const navigate = useNavigate();
+
+  const handleSelectModel = async (modelId: string) => {
+    console.log("Selected model:", modelId);
+    setIsLoading(true);
+    // Simulate model training delay
+    setTimeout(() => {
+      setIsLoading(false);
+      alert(`Model ${modelId} training initiated!`);
+    }, 2000);
+  }
   // const [filesProcessed] = useState<number>(12);
   // const [exoplanetsDetected] = useState<number>(5);
 
@@ -62,6 +76,23 @@ const ResearcherPage: React.FC = () => {
     console.log('Downloading results...');
   };
 
+  const handleTrainModel = () => {
+    console.log('Training model...');
+
+    if (!uploadedFile) {
+      alert('Please upload a dataset before training a model.');
+      return;
+    }
+    setIsLoading(true);
+
+    setTimeout(() => {
+      setIsLoading(false);
+      alert('Model training initiated!');
+      navigate('/model');
+    }, 2000);
+  }
+  
+
   return (
     <div className="min-h-screen text-white pt-10" style={{ backgroundColor: '#101022' }}>
       {/* Header */}
@@ -72,14 +103,31 @@ const ResearcherPage: React.FC = () => {
         {/* Title and Download Button */}
         <div className="flex items-center justify-between mb-8">
           <h1 className="text-4xl font-bold">Exoplanet Classification</h1>
-          <button
-            // onClick={handleDownload}
-            className="flex items-center gap-2 px-6 py-3 rounded-lg font-medium transition-all hover:opacity-90"
-            style={{ backgroundColor: '#0F0FBD' }}
-          >
-            <Download size={20} />
-            Train from Dataset
-          </button>
+            <ModelModal
+              isOpen={isModalOpen}
+              onClose={() => setIsModalOpen(false)}
+              onSelectModel={handleSelectModel}
+              isLoading={isLoading}
+            />
+            <div className='flex gap-4'>
+              <button
+                onClick={() => setIsModalOpen(true)}
+                className="flex items-center gap-2 px-6 py-3 rounded-lg font-medium text-sm transition-all hover:opacity-90"
+                style={{ backgroundColor: '#0F0FBD' }}
+              >
+                <ChevronsLeftRightEllipsis size={20} />
+                Select Model
+              </button>
+              <button
+                onClick={handleTrainModel}
+                className="flex items-center gap-2 px-6 py-3 rounded-lg font-medium text-sm transition-all hover:opacity-90"
+                style={{ backgroundColor: '#0F0FBD' }}
+              >
+                <Cpu size={20} />
+                Train from Dataset
+              </button>
+            </div>
+          
         </div>
 
         {/* Upload Section */}
@@ -88,11 +136,11 @@ const ResearcherPage: React.FC = () => {
             <div className="w-16 h-16 rounded-full flex items-center justify-center mb-6" style={{ backgroundColor: '#0F0FBD' }}>
               <Upload size={32} />
             </div>
-            <h2 className="text-xl font-semibold mb-2">Drag and drop Kepler data CSVs here</h2>
-            <p className="text-gray-400 mb-6">Or click to browse your files</p>
+            <h2 className="text-xl font-semibold mb-2">Click to browse your files</h2>
+            
             
             <label htmlFor="file-upload" className="cursor-pointer">
-              <div className="flex items-center gap-2 px-6 py-3 rounded-lg font-medium transition-all hover:opacity-90" style={{ backgroundColor: '#0F0FBD' }}>
+              <div className="flex items-center gap-2 px-6 py-3 rounded-lg font-medium text-sm transition-all hover:opacity-90" style={{ backgroundColor: '#0F0FBD' }}>
                 <FileText size={20} />
                 Upload Files
               </div>
@@ -118,11 +166,11 @@ const ResearcherPage: React.FC = () => {
         <div className='justify-center flex m-6'>
           <button
             onClick={handleDownload}
-            className="flex items-center gap-2 px-6 py-3 rounded-lg font-medium transition-all hover:opacity-90"
+            className="flex items-center gap-2 px-6 py-3 rounded-lg font-medium text-sm transition-all hover:opacity-90"
             style={{ backgroundColor: '#0F0FBD' }}
           >
-            <Download size={20} />
-            Download Result
+            <TrendingUpDown size={20} />
+            Predict
           </button>
         </div>
         
@@ -195,7 +243,7 @@ const ResearcherPage: React.FC = () => {
         <div className='justify-center flex mt-12'>
           <button
             // onClick={handleDownload}
-            className="flex items-center gap-2 px-6 py-3 rounded-lg font-medium transition-all hover:opacity-90"
+            className="flex items-center gap-2 px-6 py-3 rounded-lg font-medium text-sm transition-all hover:opacity-90"
             style={{ backgroundColor: '#0F0FBD' }}
           >
             <Download size={20} />
