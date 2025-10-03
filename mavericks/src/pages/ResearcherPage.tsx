@@ -37,8 +37,8 @@ const ProgressBar: React.FC<ProgressBarProps> = ({ percentage, color = '#0F0FBD'
 
 const ResearcherPage: React.FC = () => {
   const [uploadedFile, setUploadedFile] = useState<UploadedFile | null>(null);
-  const [filesProcessed] = useState<number>(12);
-  const [exoplanetsDetected] = useState<number>(5);
+  // const [filesProcessed] = useState<number>(12);
+  // const [exoplanetsDetected] = useState<number>(5);
 
   const results: ExoplanetResult[] = [
     { starId: 'KIC 8462852', prediction: 'Exoplanet', confidence: 85 },
@@ -128,7 +128,7 @@ const ResearcherPage: React.FC = () => {
         
 
         {/* Batch Results Summary */}
-        <div className="mb-8">
+        {/* <div className="mb-8">
           <h2 className="text-2xl font-bold mb-6">Batch Results Summary</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="rounded-xl p-6" style={{ backgroundColor: '#1a1a3e' }}>
@@ -140,7 +140,7 @@ const ResearcherPage: React.FC = () => {
               <p className="text-5xl font-bold" style={{ color: '#0F0FBD' }}>{exoplanetsDetected}</p>
             </div>
           </div>
-        </div>
+        </div> */}
 
         {/* Results Table */}
         <div>
