@@ -28,7 +28,7 @@ export default function Learn() {
             </p>
           </div>
           <img
-            src="src/assets/learnimg1.jpg"
+            src="./src/assets/learnimg1.jpg"
             alt="Exoplanet"
             className="rounded-xl shadow-[0_0_30px_10px_rgba(255,255,255,0.15)]"
           />
@@ -37,7 +37,7 @@ export default function Learn() {
         {/* Section 2 */}
         <div className="grid md:grid-cols-2 gap-16 items-center">
           <img
-            src="src/assets/learnimg2.jpg"
+            src="./src/assets/learnimg2.jpg"
             alt="Telescope detection"
             className="rounded-xl shadow-[0_0_30px_10px_rgba(173,216,230,0.25)] order-2 md:order-1"
           />
@@ -80,7 +80,7 @@ export default function Learn() {
             </p>
           </div>
           <img
-            src="src/assets/learnimg3.png"
+            src="./src/assets/learnimg3.png"
             alt="Planet classification"
             className="rounded-xl shadow-[0_0_35px_12px_rgba(255,255,255,0.2)]"
           />
@@ -89,7 +89,7 @@ export default function Learn() {
         {/* Section 4 */}
         <div className="grid md:grid-cols-2 gap-16 items-center">
           <img
-            src="src/assets/learnimg4.jpg"
+            src="./src/assets/learnimg4.jpg"
             alt="Habitable zone"
             className="rounded-xl shadow-[0_0_35px_12px_rgba(173,216,230,0.25)] order-2 md:order-1"
           />
@@ -127,7 +127,7 @@ export default function Learn() {
             </p>
           </div>
           <img
-            src="src/assets/learnimg5.jpg"
+            src="./src/assets/learnimg5.jpg"
             alt="AI in space research"
             className="rounded-xl shadow-[0_0_35px_12px_rgba(255,255,255,0.18)]"
           />
@@ -136,7 +136,7 @@ export default function Learn() {
         {/* Section 6 */}
         <div className="grid md:grid-cols-2 gap-16 items-center">
           <img
-            src="src/assets/learnimg5.jpg"
+            src="./src/assets/learnimg5.jpg"
             alt="Citizen science"
             className="rounded-xl shadow-[0_0_35px_12px_rgba(173,216,230,0.25)] order-2 md:order-1"
           />
