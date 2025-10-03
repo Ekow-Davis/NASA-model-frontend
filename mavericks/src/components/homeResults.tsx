@@ -1,5 +1,7 @@
-import { FaSearch } from "react-icons/fa";
-import { FaTimesCircle } from "react-icons/fa";
+// import { FaSearch } from "react-icons/fa";
+import { Search, CircleX } from "lucide-react";
+
+// import { FaTimesCircle } from "react-icons/fa";
 
 type ResultCardProps = {
   isExoplanet: boolean;
@@ -22,9 +24,9 @@ export default function ResultCard({ isExoplanet, accuracy }: ResultCardProps) {
             }`}
           >
             {isExoplanet ? (
-              <FaSearch className="text-blue-600 text-3xl" />
+              <Search className="text-blue-600 text-3xl" />
             ) : (
-              <FaTimesCircle className="text-red-600 text-3xl" />
+              <CircleX className="text-red-600 text-3xl" />
             )}
           </div>
         </div>

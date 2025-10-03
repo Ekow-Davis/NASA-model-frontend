@@ -62,7 +62,7 @@ const ResearcherPage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen text-white" style={{ backgroundColor: '#101022' }}>
+    <div className="min-h-screen text-white pt-10" style={{ backgroundColor: '#101022' }}>
       {/* Header */}
       
 
