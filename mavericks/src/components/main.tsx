@@ -36,8 +36,6 @@ const Main = ({ onPredictionComplete }: MainProps) => {
     koi_kepmag: null,
   });
   const [isLoading, setIsLoading] = useState(false);
-  const [predictionResult, setPredictionResult] =
-    useState<PredictionResponse | null>(null);
 
   const handleInputChange = (field: keyof FormData, value: string) => {
     setFormData((prev) => ({
@@ -81,7 +79,6 @@ const Main = ({ onPredictionComplete }: MainProps) => {
       }
 
       const result: PredictionResponse = await response.json();
-      setPredictionResult(result);
       onPredictionComplete(result); // Call the parent callback
 
       // Close modal
