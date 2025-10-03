@@ -1,19 +1,19 @@
-import ModelPerformanceTracking from './pages/ModelDashboard';
-import ResearcherPage from './pages/ResearcherPage';
-
-import { BrowserRouter as Router, Routes, Route} from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import Navbar from "./components/navbar";
+import Home from "./pages/home";
+import Learn from "./pages/learn";
 
 function App() {
-  
 
   return (
     <Router>
+      <Navbar />
       <Routes>
-        <Route path="/modeldashboard" element={<ModelPerformanceTracking />} />
-        <Route path="/researcher" element={<ResearcherPage />} />
+        <Route path="/" element={<Home />} />
+        <Route path="/learn" element={<Learn />} />
       </Routes>
     </Router>
-  )
-}
+  );
+};
 
-export default App
+export default App;
