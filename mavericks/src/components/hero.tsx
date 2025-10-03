@@ -3,7 +3,7 @@ const hero = () => {
     <section
       className="relative h-screen flex items-center justify-center text-center text-white"
       style={{
-        backgroundImage: "url('/src/assets/herobg.jpg')",
+        backgroundImage: "url('/src/assets/learnimg3.png')",
         backgroundSize: "cover",
         backgroundPosition: "center",
       }}
