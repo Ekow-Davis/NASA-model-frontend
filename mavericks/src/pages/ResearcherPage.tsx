@@ -117,7 +117,7 @@ const ResearcherPage: React.FC = () => {
         </div>
         <div className='justify-center flex m-6'>
           <button
-            // onClick={handleDownload}
+            onClick={handleDownload}
             className="flex items-center gap-2 px-6 py-3 rounded-lg font-medium transition-all hover:opacity-90"
             style={{ backgroundColor: '#0F0FBD' }}
           >
