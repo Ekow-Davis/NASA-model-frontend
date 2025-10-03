@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Upload, Download, FileText, CheckCircle } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 interface UploadedFile {
   name: string;
@@ -72,12 +73,12 @@ const ResearcherPage: React.FC = () => {
         <div className="flex items-center justify-between mb-8">
           <h1 className="text-4xl font-bold">Exoplanet Classification</h1>
           <button
-            onClick={handleDownload}
+            // onClick={handleDownload}
             className="flex items-center gap-2 px-6 py-3 rounded-lg font-medium transition-all hover:opacity-90"
             style={{ backgroundColor: '#0F0FBD' }}
           >
             <Download size={20} />
-            Download Results
+            Train from Dataset
           </button>
         </div>
 
@@ -114,6 +115,17 @@ const ResearcherPage: React.FC = () => {
             )}
           </div>
         </div>
+        <div className='justify-center flex m-6'>
+          <button
+            onClick={handleDownload}
+            className="flex items-center gap-2 px-6 py-3 rounded-lg font-medium transition-all hover:opacity-90"
+            style={{ backgroundColor: '#0F0FBD' }}
+          >
+            <Download size={20} />
+            Download Result
+          </button>
+        </div>
+        
 
         {/* Batch Results Summary */}
         <div className="mb-8">
@@ -165,9 +177,12 @@ const ResearcherPage: React.FC = () => {
                         </div>
                       </td>
                       <td className="px-6 py-5">
-                        <button className="font-medium transition-colors hover:opacity-80" style={{ color: '#0F0FBD' }}>
-                          View
-                        </button>
+                        {/* /results/${result.starId} */}
+                        <Link to={`/model`}>
+                          <button className="font-medium transition-colors hover:opacity-80" style={{ color: '#0F0FBD' }}>
+                            View
+                          </button>
+                        </Link>
                       </td>
                     </tr>
                   ))}
@@ -175,6 +190,18 @@ const ResearcherPage: React.FC = () => {
               </table>
             </div>
           </div>
+        </div>
+
+        <div className='justify-center flex mt-12'>
+          <button
+            // onClick={handleDownload}
+            className="flex items-center gap-2 px-6 py-3 rounded-lg font-medium transition-all hover:opacity-90"
+            style={{ backgroundColor: '#0F0FBD' }}
+          >
+            <Download size={20} />
+            Download Result
+          </button>
+          
         </div>
       </main>
     </div>
