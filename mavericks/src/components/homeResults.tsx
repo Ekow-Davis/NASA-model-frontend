@@ -1,21 +1,35 @@
-// import { FaSearch } from "react-icons/fa";
+// components/homeResults.tsx
 import { Search, CircleX } from "lucide-react";
 
-// import { FaTimesCircle } from "react-icons/fa";
+interface PredictionResult {
+  prediction: "CONFIRMED" | "FALSE POSITIVE";
+  confidence: number;
+  model_type: string;
+  training_mode: string;
+}
 
-type ResultCardProps = {
-  isExoplanet: boolean;
-  accuracy: number;
-};
+interface HomeResultsProps {
+  predictionResult: PredictionResult | null;
+}
 
-export default function ResultCard({ isExoplanet, accuracy }: ResultCardProps) {
+export default function HomeResults({ predictionResult }: HomeResultsProps) {
+  if (!predictionResult) {
+    return null;
+  }
+
+  const isExoplanet = predictionResult.prediction === "CONFIRMED";
+  const accuracy = Math.round(predictionResult.confidence * 100);
+
   return (
-    <section className="font-orbit min-h-screen bg-[#0a0a18] text-white px-8 pt-16">
+    <section
+      id="results"
+      className="font-orbit min-h-screen bg-[#0a0a18] text-white px-8 pt-16"
+    >
       <h1 className="text-3xl font-bold text-center mb-10">
         prediction result
       </h1>
 
-      <div className="bg-[#101022]  text-white rounded-lg shadow-lg max-w-3xl mx-auto p-8">
+      <div className="bg-[#101022] text-white rounded-lg shadow-lg max-w-3xl mx-auto p-8">
         {/* Icon */}
         <div className="flex justify-center mb-6">
           <div
@@ -36,12 +50,18 @@ export default function ResultCard({ isExoplanet, accuracy }: ResultCardProps) {
           {isExoplanet ? "Exoplanet Detected" : "Not an Exoplanet"}
         </h2>
 
+        {/* Model Info */}
+        <div className="text-center mb-6 text-sm text-gray-300">
+          Model: {predictionResult.model_type.replace(/_/g, " ").toUpperCase()}{" "}
+          | Mode: {predictionResult.training_mode.toUpperCase()}
+        </div>
+
         {/* Accuracy Bar */}
-        <div className="mb-2 flex justify-between text-sm font-medium text-gray-700">
-          <span>accuracy</span>
+        <div className="mb-2 flex justify-between text-sm font-medium text-gray-300">
+          <span>confidence</span>
           <span>{accuracy}%</span>
         </div>
-        <div className="w-full bg-[#101041] rounded-full h-[4px]">
+        <div className="w-full bg-[#101041] rounded-full h-[4px] mb-8">
           <div
             className={`h-[4px] rounded-full ${
               isExoplanet ? "bg-[#0f0fbd]" : "bg-red-500"
@@ -53,8 +73,14 @@ export default function ResultCard({ isExoplanet, accuracy }: ResultCardProps) {
         {/* Explanation */}
         <p className="mt-6 text-white text-xs text-center leading-relaxed">
           {isExoplanet
-            ? `The model predicts with ${accuracy}% confidence that the provided data indicates the presence of an exoplanet. This conclusion is based on the analysis of key features such as orbital period, transit depth, and stellar characteristics.`
-            : `The model predicts with ${accuracy}% confidence that the provided data does not indicate the presence of an exoplanet. This conclusion is based on the analysis of key features such as orbital period, transit depth, and stellar characteristics.`}
+            ? `The ${predictionResult.model_type.replace(
+                /_/g,
+                " "
+              )} model predicts with ${accuracy}% confidence that the provided data indicates the presence of an exoplanet. This conclusion is based on the analysis of key features inputted above.`
+            : `The ${predictionResult.model_type.replace(
+                /_/g,
+                " "
+              )} model predicts with ${accuracy}% confidence that the provided data does not indicate the presence of an exoplanet. This conclusion is based on the analysis of key features inputted above.`}
         </p>
       </div>
     </section>
