@@ -17,14 +17,17 @@ export default function Learn() {
         <div className="grid md:grid-cols-2 gap-16 items-center">
           <div>
             <h2 className="text-3xl font-semibold mb-6">
-              What are Exoplanets?
+              How Exoplanet Detection Works
             </h2>
             <p className="text-gray-300 leading-relaxed">
-              Exoplanets are planets that orbit stars beyond our solar system.
-              They can be gas giants like Jupiter, rocky worlds like Earth, or
-              even exotic planets unlike anything in our solar system.
-              Discoveries of exoplanets have revolutionized our understanding of
-              the universe and our place within it.
+              Exoplanet detection primarily relies on observing the effects of
+              an exoplanet on its host star. The transit method, one of the most
+              common techniques, involves monitoring the star's brightness for
+              periodic dips caused by an exoplanet passing in front of it.
+              Another method, the radial velocity method, detects the wobble of
+              a star caused by the gravitational pull of an orbiting exoplanet.
+              Both methods provide valuable data about the exoplanet's size,
+              mass, and orbital characteristics.
             </p>
           </div>
           <img
@@ -43,26 +46,17 @@ export default function Learn() {
           />
           <div className="order-1 md:order-2">
             <h2 className="text-3xl font-semibold mb-6">
-              How Do We Detect Exoplanets?
+              Feature Explanations
             </h2>
             <p className="text-gray-300 leading-relaxed">
-              Scientists use several techniques to find exoplanets. The most
-              common methods are:
+              Understanding the features used in exoplanet classification is
+              crucial. Key features include transit depth (the amount of light
+              blocked by the exoplanet), transit duration (how long the
+              exoplanet takes to cross the star), and the period of the transit
+              (how often the exoplanet orbits). These features, along with
+              others like stellar characteristics, help determine the likelihood
+              of an exoplanet's existence.
             </p>
-            <ul className="list-disc list-inside text-gray-300 mt-4 space-y-2">
-              <li>
-                <strong>Transit Method:</strong> Observing dips in a star’s
-                brightness when a planet passes in front.
-              </li>
-              <li>
-                <strong>Radial Velocity:</strong> Measuring tiny wobbles in a
-                star’s motion caused by an orbiting planet.
-              </li>
-              <li>
-                <strong>Direct Imaging:</strong> Capturing actual images of
-                large exoplanets far from their stars.
-              </li>
-            </ul>
           </div>
         </div>
 
@@ -70,13 +64,15 @@ export default function Learn() {
         <div className="grid md:grid-cols-2 gap-16 items-center">
           <div>
             <h2 className="text-3xl font-semibold mb-6">
-              Why Classify Exoplanets?
+              Common False Positives
             </h2>
             <p className="text-gray-300 leading-relaxed">
-              Classifying exoplanets helps scientists understand their
-              properties—size, orbit, temperature, atmosphere—and whether they
-              might be habitable. This classification helps prioritize targets
-              for future missions and exploration.
+              False positives can arise from various sources, such as eclipsing
+              binary stars (two stars orbiting each other and periodically
+              blocking each other's light) or instrumental artifacts.
+              Distinguishing between true exoplanet signals and these false
+              positives requires careful analysis and validation using multiple
+              observation techniques.
             </p>
           </div>
           <img
@@ -95,21 +91,15 @@ export default function Learn() {
           />
           <div className="order-1 md:order-2">
             <h2 className="text-3xl font-semibold mb-6">
-              Signs of Habitability
+              Real Discovery Examples
             </h2>
             <p className="text-gray-300 leading-relaxed">
-              Not all exoplanets are habitable. Scientists look for:
+              Explore real-world examples of exoplanet discoveries made by NASA.
+              These examples showcase the application of detection methods and
+              feature analysis in identifying and characterizing exoplanets.
+              Each case study includes data visualizations and explanations of
+              the key findings.
             </p>
-            <ul className="list-disc list-inside text-gray-300 mt-4 space-y-2">
-              <li>
-                The <strong>habitable zone</strong>—where liquid water could
-                exist.
-              </li>
-              <li>Atmospheres with gases like oxygen or methane.</li>
-              <li>
-                Stable stars that don’t blast planets with harmful radiation.
-              </li>
-            </ul>
           </div>
         </div>
 
@@ -156,10 +146,10 @@ export default function Learn() {
 
       {/* CTA Section */}
       <div className="text-center py-24">
-        <button className="bg-[#003c92] hover:bg-blue-700 text-white px-10 py-3 rounded-md text-xl font-semibold shadow-[0_0_40px_10px_rgba(0,123,255,0.4)]">
+        <button className="bg-[#003c92] hover:bg-blue-700 text-white px-10 py-3 rounded-md text-lg font-medium shadow-[0_0_40px_10px_rgba(0,123,255,0.4)]">
           Start Classifying Exoplanets
         </button>
-        <p className="mt-9 text-gray-300 text-lg">
+        <p className="mt-9 text-gray-300 text-sm">
           Join us and make a real discovery.
         </p>
       </div>

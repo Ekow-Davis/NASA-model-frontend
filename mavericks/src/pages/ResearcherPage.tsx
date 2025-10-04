@@ -163,25 +163,10 @@ const ResearcherPage: React.FC = () => {
 
       setPredictionResults(results);
       setHasPredicted(true);
-      alert(
-        `Prediction completed successfully! Processed ${results.length} stars.`
-      );
     } catch (error) {
       console.error("Prediction error:", error);
       alert("Prediction failed. Please try again.");
 
-      // Fallback to mock data for demonstration using the uploaded CSV structure
-      const mockResults: ExoplanetResult[] = [
-        { starId: "Star_1", prediction: "Exoplanet", confidence: 85 },
-        { starId: "Star_2", prediction: "No Exoplanet", confidence: 92 },
-        { starId: "Star_3", prediction: "Exoplanet", confidence: 78 },
-        { starId: "Star_4", prediction: "No Exoplanet", confidence: 89 },
-        { starId: "Star_5", prediction: "Exoplanet", confidence: 95 },
-        { starId: "Star_6", prediction: "No Exoplanet", confidence: 65 },
-        { starId: "Star_7", prediction: "Exoplanet", confidence: 82 },
-        { starId: "Star_8", prediction: "No Exoplanet", confidence: 71 },
-      ];
-      setPredictionResults(mockResults);
       setHasPredicted(true);
     } finally {
       setIsLoading(false);
