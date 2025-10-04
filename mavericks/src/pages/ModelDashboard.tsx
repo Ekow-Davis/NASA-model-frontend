@@ -1,7 +1,9 @@
 //metricsDashboard.tsx
 import React, { useState, useEffect } from "react";
-import { TrendingUp, TrendingDown, ChevronDown, ChevronsLeftRightEllipsis } from "lucide-react";
+import { TrendingUp, TrendingDown, ChevronsLeftRightEllipsis } from "lucide-react";
 import ModelModal from "../components/ModelModal";
+import { useModelContext } from "../components/ModelContext";
+import type { ModelConfig } from "../components/ModelContext";
 
 // Type Interfaces
 interface MetricData {
@@ -50,11 +52,11 @@ interface DropdownControlProps {
   onChange: (value: string) => void;
 }
 
-interface ModelConfig {
-  model_type: string;
-  training_mode: "static" | "dynamic";
-  hyperparameters?: string;
-}
+// interface ModelConfig {
+//   model_type: string;
+//   training_mode: "static" | "dynamic";
+//   hyperparameters?: string;
+// }
 
 interface LoadingSpinnerProps {
   onComplete?: () => void;
@@ -445,10 +447,11 @@ const SliderControl: React.FC<SliderControlProps> = ({
 
 // Main Component
 const ModelPerformanceTracking: React.FC = () => {
-  const [selectedModel, setSelectedModel] = useState<ModelConfig>({
-  model_type: "logistic_regression",
-  training_mode: "dynamic"
-});
+  // const [selectedModel, setSelectedModel] = useState<ModelConfig>({
+  //   model_type: "logistic_regression",
+  //   training_mode: "dynamic"
+  // });
+
   // Logistic Regression controls
   const [cValue, setCValue] = useState<number>(0.5);
   const [penalty, setPenalty] = useState<string>('l2');
@@ -465,8 +468,8 @@ const ModelPerformanceTracking: React.FC = () => {
 
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  // const [regularization, setRegularization] = useState<number>(0.01);
-  const [maxIterations, setMaxIterations] = useState<number>(1000);
+  
+  const { selectedModel, setSelectedModel, uploadedFile } = useModelContext();
 
   const [metrics, setMetrics] = useState<PerformanceMetrics>({
     accuracy: { value: 92.5, change: 0, isIncrease: true },
@@ -494,10 +497,10 @@ const ModelPerformanceTracking: React.FC = () => {
   ];
 
   const handleSelectModel = async (modelId: string) => {
-    // Convert string modelId to ModelConfig
+    // Fixed the type assertion to match the union type
     const modelConfig: ModelConfig = {
-      model_type: modelId as "logistic_regression" | "knn",
-      training_mode: "dynamic", // Default to dynamic for training
+      model_type: modelId as "logistic_regression" | "knn" | "linear_regression",
+      training_mode: "dynamic",
     };
 
     console.log("Selected model:", modelConfig);
@@ -505,9 +508,70 @@ const ModelPerformanceTracking: React.FC = () => {
     setIsModalOpen(false);
   };
 
-  const handleApplyChanges = () => {
-    setIsLoading(true);
+  const handleResetToDefault = () => {
+    // Add null check
+    if (!selectedModel) return;
+    
+    // Remove linear_regression case since it's not in your types
+    if (selectedModel.model_type === 'logistic_regression') {
+      setCValue(0);
+      setPenalty('l2');
+    } else if (selectedModel.model_type === 'linear_regression') {
+      setAlpha(0);
+      setRegularizationType('L2 (Ridge)');
+    } else if (selectedModel.model_type === 'knn') {
+      setNNeighbors(2);
+      setWeights('uniform');
+    }
   };
+
+
+
+  const handleApplyChanges = () => {
+  setIsLoading(true);
+  
+  // Simulate processing time
+  setTimeout(() => {
+    const prevMetrics = { ...metrics };
+
+    const newMetrics: PerformanceMetrics = {
+      accuracy: {
+        value: Math.min(99, metrics.accuracy.value + 3),
+        change: 0,
+        isIncrease: true,
+      },
+      precision: {
+        value: Math.min(99, metrics.precision.value + 3),
+        change: 0,
+        isIncrease: true,
+      },
+      recall: {
+        value: Math.max(70, metrics.recall.value - 3),
+        change: 0,
+        isIncrease: false,
+      },
+      f1Score: {
+        value: Math.min(99, metrics.f1Score.value + 3),
+        change: 0,
+        isIncrease: true,
+      },
+    };
+
+    // Calculate changes
+    newMetrics.accuracy.change = ((newMetrics.accuracy.value - prevMetrics.accuracy.value) / prevMetrics.accuracy.value) * 100;
+    newMetrics.precision.change = ((newMetrics.precision.value - prevMetrics.precision.value) / prevMetrics.precision.value) * 100;
+    newMetrics.recall.change = ((newMetrics.recall.value - prevMetrics.recall.value) / prevMetrics.recall.value) * 100;
+    newMetrics.f1Score.change = ((newMetrics.f1Score.value - prevMetrics.f1Score.value) / prevMetrics.f1Score.value) * 100;
+
+    setMetrics(newMetrics);
+    setTrainingHistory((prev) => [
+      ...prev,
+      { iteration: prev.length + 1, f1Score: newMetrics.f1Score.value },
+    ]);
+
+    setIsLoading(false);
+  }, 2000);
+};
 
   {
     isLoading && (
@@ -588,19 +652,19 @@ const ModelPerformanceTracking: React.FC = () => {
     );
   };
 
-  const handleResetToDefault = () => {
-    // Reset based on model type
-    if (selectedModel.model_type === 'logistic_regression') {
-      setCValue(0);
-      setPenalty('l2');
-    } else if (selectedModel.model_type === 'linear_regression') {
-      setAlpha(0);
-      setRegularizationType('L2 (Ridge)');
-    } else if (selectedModel.model_type === 'knn') {
-      setNNeighbors(2);
-      setWeights('uniform');
-    }
-  };
+  // const handleResetToDefault = () => {
+  //   // Reset based on model type
+  //   if (selectedModel.model_type === 'logistic_regression') {
+  //     setCValue(0);
+  //     setPenalty('l2');
+  //   } else if (selectedModel.model_type === 'linear_regression') {
+  //     setAlpha(0);
+  //     setRegularizationType('L2 (Ridge)');
+  //   } else if (selectedModel.model_type === 'knn') {
+  //     setNNeighbors(2);
+  //     setWeights('uniform');
+  //   }
+  // };
 
   return (
     <div
@@ -635,6 +699,7 @@ const ModelPerformanceTracking: React.FC = () => {
                 ? `Model: ${selectedModel.model_type}`
                 : "Select Model"}
             </button>
+            {uploadedFile ? <p>Uploaded File: {uploadedFile.name}</p> : <p>No file uploaded</p>}
           </div>
         </div>
 
@@ -660,48 +725,31 @@ const ModelPerformanceTracking: React.FC = () => {
         </div>
 
         {/* Model Controls */}
-        <div>
-          <h2 className="text-2xl font-bold mb-4">Model Controls</h2>
-          <div className="bg-gray-900 rounded-xl p-8 border border-gray-800">
+        {/* Model Controls */}
+      <div>
+        <h2 className="text-2xl font-bold mb-4">Model Controls</h2>
+        <div className="bg-gray-900 rounded-xl p-8 border border-gray-800">
+          {selectedModel ? (
+            <>
               {/* Logistic Regression Controls */}
-            {selectedModel.model_type === 'logistic_regression' && (
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-6">
-                <SliderControl
-                  label="C (Inverse of Regularization Strength)"
-                  value={cValue}
-                  min={0}
-                  max={1}
-                  step={0.01}
-                  onChange={setCValue}
-                />
-                <DropdownControl
-                  label="Penalty (Type of Regularization)"
-                  value={penalty}
-                  options={['l1', 'l2', 'elasticnet', 'none']}
-                  onChange={setPenalty}
-                />
-              </div>
-            )}
-
-            {/* Linear Regression Controls */}
-            {selectedModel.model_type === 'linear_regression' && (
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-6">
-                <SliderControl
-                  label="Alpha (Regularization Strength)"
-                  value={alpha}
-                  min={0}
-                  max={1}
-                  step={0.01}
-                  onChange={setAlpha}
-                />
-                <DropdownControl
-                  label="Type of Regularization"
-                  value={regularizationType}
-                  options={['L1 (Lasso)', 'L2 (Ridge)', 'Elastic Net']}
-                  onChange={setRegularizationType}
-                />
-              </div>
-            )}
+              {selectedModel.model_type === 'logistic_regression' && (
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-6">
+                  <SliderControl
+                    label="C (Inverse of Regularization Strength)"
+                    value={cValue}
+                    min={0}
+                    max={1}
+                    step={0.01}
+                    onChange={setCValue}
+                  />
+                  <DropdownControl
+                    label="Penalty (Type of Regularization)"
+                    value={penalty}
+                    options={['l1', 'l2', 'elasticnet', 'none']} // cspell:disable-line
+                    onChange={setPenalty}
+                  />
+                </div>
+              )}
 
             {/* KNN Controls */}
             {selectedModel.model_type === 'knn' && (
@@ -722,25 +770,30 @@ const ModelPerformanceTracking: React.FC = () => {
                 />
               </div>
             )}
-              
-            
-            <div className="flex justify-end gap-4">
-              <button
-                onClick={handleResetToDefault}
-                className="px-6 py-3 bg-gray-800 text-white rounded-lg font-medium hover:bg-gray-750 transition-colors"
-              >
-                Reset to Default
-              </button>
-              <button
-                onClick={handleApplyChanges}
-                className="px-6 py-3 rounded-lg font-medium transition-colors"
-                style={{ backgroundColor: "#0F0FBD" }}
-              >
-                Apply Changes
-              </button>
+        
+              <div className="flex justify-end gap-4">
+                <button
+                  onClick={handleResetToDefault}
+                  className="px-6 py-3 bg-gray-800 text-white rounded-lg font-medium hover:bg-gray-750 transition-colors"
+                >
+                  Reset to Default
+                </button>
+                <button
+                  onClick={handleApplyChanges}
+                  className="px-6 py-3 rounded-lg font-medium transition-colors"
+                  style={{ backgroundColor: "#0F0FBD" }}
+                >
+                  Apply Changes
+                </button>
+              </div>
+            </>
+          ) : (
+            <div className="text-center py-8">
+              <p className="text-gray-400">Please select a model to configure controls</p>
             </div>
-          </div>
+          )}
         </div>
+      </div>
       </main>
 
       <style>{`

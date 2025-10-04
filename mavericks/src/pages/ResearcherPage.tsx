@@ -1,5 +1,7 @@
 //UploadPage.tsx
 import React, { useState } from "react";
+import { useModelContext } from "../components/ModelContext";
+import type { ModelConfig } from "../components/ModelContext";
 import {
   Upload,
   Download,
@@ -20,11 +22,11 @@ interface ColumnData {
   description?: string;
 }
 
-interface UploadedFile {
-  name: string;
-  file: File;
-  uploaded: boolean;
-}
+// interface UploadedFile {
+//   name: string;
+//   file: File;
+//   uploaded: boolean;
+// }
 
 interface ExoplanetResult {
   starId: string;
@@ -37,11 +39,11 @@ interface ProgressBarProps {
   color?: string;
 }
 
-interface ModelConfig {
-  model_type: "logistic_regression" | "knn";
-  training_mode: "static" | "dynamic";
-  hyperparameters?: string;
-}
+// interface ModelConfig {
+//   model_type: "logistic_regression" | "knn";
+//   training_mode: "static" | "dynamic";
+//   hyperparameters?: string;
+// }
 
 const ProgressBar: React.FC<ProgressBarProps> = ({
   percentage,
@@ -66,8 +68,8 @@ const ProgressBar: React.FC<ProgressBarProps> = ({
 };
 
 const ResearcherPage: React.FC = () => {
-  const [uploadedFile, setUploadedFile] = useState<UploadedFile | null>(null);
-  const [selectedModel, setSelectedModel] = useState<ModelConfig | null>(null);
+  // const [uploadedFile, setUploadedFile] = useState<UploadedFile | null>(null);
+  // const [selectedModel, setSelectedModel] = useState<ModelConfig | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [isTrainLoading, setIsTrainLoading] = useState(false);
@@ -76,6 +78,9 @@ const ResearcherPage: React.FC = () => {
   );
   const [trainingStatus, setTrainingStatus] = useState<string>("");
   const [hasPredicted, setHasPredicted] = useState(false);
+
+  const { selectedModel, setSelectedModel, uploadedFile, setUploadedFile, clearAll } = useModelContext();
+
   const navigate = useNavigate();
 
   const sampleColumns: ColumnData[] = [
@@ -142,6 +147,8 @@ const ResearcherPage: React.FC = () => {
     setSelectedModel(modelConfig);
     setIsModalOpen(false);
   };
+
+  
 
   const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -290,6 +297,10 @@ const ResearcherPage: React.FC = () => {
       setIsTrainLoading(false);
     }
   };
+
+  React.useEffect(() => {
+    clearAll();
+  }, []);
 
 
   return (
