@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from 'react';
-import { TrendingUp, TrendingDown, ChevronDown } from 'lucide-react';
+//metricsDashboard.tsx
+import React, { useState, useEffect } from "react";
+import { TrendingUp, TrendingDown, ChevronDown } from "lucide-react";
 
 // Type Interfaces
 interface MetricData {
@@ -93,11 +94,10 @@ const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({ onComplete }) => {
             ? Math.random() * 400 + 200
             : Math.random() * 100 + 50;
 
-
         setTimeout(updatePercentage, delay);
       } else {
         setTimeout(() => {
-          onComplete?.();   
+          onComplete?.();
         }, 500);
       }
     };
@@ -127,24 +127,30 @@ const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({ onComplete }) => {
         {/* Innermost orbit - grey (fastest) */}
         <div className="absolute inset-0 flex items-center justify-center">
           <div className="w-32 h-32 relative animate-spin-fastest">
-            <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 
-            w-3 h-3 bg-gray-400 rounded-full shadow-lg"></div>
+            <div
+              className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 
+            w-3 h-3 bg-gray-400 rounded-full shadow-lg"
+            ></div>
           </div>
         </div>
 
         {/* Middle orbit - orange (medium speed) */}
         <div className="absolute inset-0 flex items-center justify-center">
           <div className="w-48 h-48 relative animate-spin-slower">
-            <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 
-            w-3 h-3 bg-orange-700 rounded-full shadow-lg shadow-orange-500/50"></div>
+            <div
+              className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 
+            w-3 h-3 bg-orange-700 rounded-full shadow-lg shadow-orange-500/50"
+            ></div>
           </div>
         </div>
 
         {/* Outer orbit - blue (slowest) */}
         <div className="absolute inset-0 flex items-center justify-center">
           <div className="w-64 h-64 relative animate-spin-slowest">
-            <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 
-            w-5 h-5 bg-blue-400 rounded-full shadow-lg shadow-blue-500/50"></div>
+            <div
+              className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 
+            w-5 h-5 bg-blue-400 rounded-full shadow-lg shadow-blue-500/50"
+            ></div>
           </div>
         </div>
       </div>
@@ -153,14 +159,30 @@ const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({ onComplete }) => {
 };
 
 // Performance Metric Card Component
-const MetricCard: React.FC<{ title: string; metric: MetricData }> = ({ title, metric }) => (
+const MetricCard: React.FC<{ title: string; metric: MetricData }> = ({
+  title,
+  metric,
+}) => (
   <div className="bg-gray-900 rounded-xl p-6 border border-gray-800">
     <p className="text-gray-400 text-sm mb-2">{title}</p>
-    <p className="text-white text-4xl font-bold mb-2">{metric.value.toFixed(1)}%</p>
+    <p className="text-white text-4xl font-bold mb-2">
+      {metric.value.toFixed(1)}%
+    </p>
     {metric.change !== undefined && (
-      <div className={`flex items-center gap-1 text-sm font-medium ${metric.isIncrease ? 'text-green-500' : 'text-red-500'}`}>
-        {metric.isIncrease ? <TrendingUp size={16} /> : <TrendingDown size={16} />}
-        <span>{metric.isIncrease ? '+' : ''}{metric.change.toFixed(1)}%</span>
+      <div
+        className={`flex items-center gap-1 text-sm font-medium ${
+          metric.isIncrease ? "text-green-500" : "text-red-500"
+        }`}
+      >
+        {metric.isIncrease ? (
+          <TrendingUp size={16} />
+        ) : (
+          <TrendingDown size={16} />
+        )}
+        <span>
+          {metric.isIncrease ? "+" : ""}
+          {metric.change.toFixed(1)}%
+        </span>
       </div>
     )}
   </div>
@@ -169,29 +191,43 @@ const MetricCard: React.FC<{ title: string; metric: MetricData }> = ({ title, me
 // Confusion Matrix Component
 const ConfusionMatrix: React.FC<{ data: ConfusionMatrixData }> = ({ data }) => {
   const getColor = (value: number) => {
-    if (value >= 1000) return '#0F0FBD';
-    if (value >= 500) return '#141483';
-    if (value >= 100) return '#171767';
-    return '#19194A';
+    if (value >= 1000) return "#0F0FBD";
+    if (value >= 500) return "#141483";
+    if (value >= 100) return "#171767";
+    return "#19194A";
   };
 
   return (
     <div className="bg-gray-900 rounded-xl p-6 border border-gray-800">
-      <h3 className="text-white text-lg font-semibold mb-4">Confusion Matrix</h3>
+      <h3 className="text-white text-lg font-semibold mb-4">
+        Confusion Matrix
+      </h3>
       <div className="grid grid-cols-2 gap-4">
-        <div className="rounded-lg p-6 flex flex-col items-center justify-center" style={{ backgroundColor: getColor(data.trueNeg) }}>
+        <div
+          className="rounded-lg p-6 flex flex-col items-center justify-center"
+          style={{ backgroundColor: getColor(data.trueNeg) }}
+        >
           <p className="text-white text-4xl font-bold mb-1">{data.trueNeg}</p>
           <p className="text-gray-300 text-sm">True Neg</p>
         </div>
-        <div className="rounded-lg p-6 flex flex-col items-center justify-center" style={{ backgroundColor: getColor(data.falsePos) }}>
+        <div
+          className="rounded-lg p-6 flex flex-col items-center justify-center"
+          style={{ backgroundColor: getColor(data.falsePos) }}
+        >
           <p className="text-white text-4xl font-bold mb-1">{data.falsePos}</p>
           <p className="text-gray-300 text-sm">False Pos</p>
         </div>
-        <div className="rounded-lg p-6 flex flex-col items-center justify-center" style={{ backgroundColor: getColor(data.falseNeg) }}>
+        <div
+          className="rounded-lg p-6 flex flex-col items-center justify-center"
+          style={{ backgroundColor: getColor(data.falseNeg) }}
+        >
           <p className="text-white text-4xl font-bold mb-1">{data.falseNeg}</p>
           <p className="text-gray-300 text-sm">False Neg</p>
         </div>
-        <div className="rounded-lg p-6 flex flex-col items-center justify-center" style={{ backgroundColor: getColor(data.truePos) }}>
+        <div
+          className="rounded-lg p-6 flex flex-col items-center justify-center"
+          style={{ backgroundColor: getColor(data.truePos) }}
+        >
           <p className="text-white text-4xl font-bold mb-1">{data.truePos}</p>
           <p className="text-gray-300 text-sm">True Pos</p>
         </div>
@@ -201,25 +237,33 @@ const ConfusionMatrix: React.FC<{ data: ConfusionMatrixData }> = ({ data }) => {
 };
 
 // Feature Importance Component
-const FeatureImportance: React.FC<{ features: FeatureImportanceItem[] }> = ({ features }) => {
-  const [animatedValues, setAnimatedValues] = useState<number[]>(features.map(() => 0));
+const FeatureImportance: React.FC<{ features: FeatureImportanceItem[] }> = ({
+  features,
+}) => {
+  const [animatedValues, setAnimatedValues] = useState<number[]>(
+    features.map(() => 0)
+  );
 
   useEffect(() => {
     const timer = setTimeout(() => {
-      setAnimatedValues(features.map(f => f.value));
+      setAnimatedValues(features.map((f) => f.value));
     }, 100);
     return () => clearTimeout(timer);
   }, [features]);
 
   return (
     <div className="bg-gray-900 rounded-xl p-6 border border-gray-800">
-      <h3 className="text-white text-lg font-semibold mb-4">Feature Importance</h3>
+      <h3 className="text-white text-lg font-semibold mb-4">
+        Feature Importance
+      </h3>
       <div className="space-y-4">
         {features.map((feature, index) => (
           <div key={index} className="space-y-2">
             <div className="flex justify-between items-center">
               <span className="text-gray-300 text-sm">{feature.name}</span>
-              <span className="text-white font-medium">{feature.value.toFixed(2)}</span>
+              <span className="text-white font-medium">
+                {feature.value.toFixed(2)}
+              </span>
             </div>
             <div className="w-full bg-gray-800 rounded-full h-2 overflow-hidden">
               <div
@@ -235,41 +279,54 @@ const FeatureImportance: React.FC<{ features: FeatureImportanceItem[] }> = ({ fe
 };
 
 // Training History Component
-const TrainingHistory: React.FC<{ history: TrainingHistoryPoint[] }> = ({ history }) => {
+const TrainingHistory: React.FC<{ history: TrainingHistoryPoint[] }> = ({
+  history,
+}) => {
   const [visiblePoints, setVisiblePoints] = useState<number>(0);
 
   useEffect(() => {
     if (visiblePoints < history.length) {
       const timer = setTimeout(() => {
-        setVisiblePoints(prev => prev + 1);
+        setVisiblePoints((prev) => prev + 1);
       }, 300);
       return () => clearTimeout(timer);
     }
   }, [visiblePoints, history.length]);
 
-  const maxF1 = Math.max(...history.map(h => h.f1Score));
-  const minF1 = Math.min(...history.map(h => h.f1Score));
+  const maxF1 = Math.max(...history.map((h) => h.f1Score));
+  const minF1 = Math.min(...history.map((h) => h.f1Score));
   const range = maxF1 - minF1;
 
   const getY = (f1Score: number) => {
     return 200 - ((f1Score - minF1) / range) * 180;
   };
 
-  const pathPoints = history.slice(0, visiblePoints).map((point, index) => {
-    const x = (index / (history.length - 1)) * 300;
-    const y = getY(point.f1Score);
-    return `${index === 0 ? 'M' : 'L'} ${x} ${y}`;
-  }).join(' ');
+  const pathPoints = history
+    .slice(0, visiblePoints)
+    .map((point, index) => {
+      const x = (index / (history.length - 1)) * 300;
+      const y = getY(point.f1Score);
+      return `${index === 0 ? "M" : "L"} ${x} ${y}`;
+    })
+    .join(" ");
 
   return (
     <div className="bg-gray-900 rounded-xl p-6 border border-gray-800 h-full">
-      <h3 className="text-white text-lg font-semibold mb-4">Training History</h3>
+      <h3 className="text-white text-lg font-semibold mb-4">
+        Training History
+      </h3>
       <div className="relative w-full h-48">
         <svg viewBox="0 0 300 200" className="w-full h-full">
           <defs>
             <linearGradient id="lineGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-              <stop offset="0%" style={{ stopColor: '#8B5CF6', stopOpacity: 1 }} />
-              <stop offset="100%" style={{ stopColor: '#0F0FBD', stopOpacity: 1 }} />
+              <stop
+                offset="0%"
+                style={{ stopColor: "#8B5CF6", stopOpacity: 1 }}
+              />
+              <stop
+                offset="100%"
+                style={{ stopColor: "#0F0FBD", stopOpacity: 1 }}
+              />
             </linearGradient>
           </defs>
           <path
@@ -301,7 +358,14 @@ const TrainingHistory: React.FC<{ history: TrainingHistoryPoint[] }> = ({ histor
 };
 
 // Slider Control Component
-const SliderControl: React.FC<SliderControlProps> = ({ label, value, min, max, step, onChange }) => {
+const SliderControl: React.FC<SliderControlProps> = ({
+  label,
+  value,
+  min,
+  max,
+  step,
+  onChange,
+}) => {
   const [inputValue, setInputValue] = useState<string>(value.toString());
 
   const handleSliderChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -351,7 +415,9 @@ const SliderControl: React.FC<SliderControlProps> = ({ label, value, min, max, s
           onChange={handleSliderChange}
           className="w-full h-2 bg-gray-700 rounded-lg appearance-none cursor-pointer slider"
           style={{
-            background: `linear-gradient(to right, #0F0FBD 0%, #0F0FBD ${((value - min) / (max - min)) * 100}%, #374151 ${((value - min) / (max - min)) * 100}%, #374151 100%)`
+            background: `linear-gradient(to right, #0F0FBD 0%, #0F0FBD ${
+              ((value - min) / (max - min)) * 100
+            }%, #374151 ${((value - min) / (max - min)) * 100}%, #374151 100%)`,
           }}
         />
       </div>
@@ -365,86 +431,100 @@ const SliderControl: React.FC<SliderControlProps> = ({ label, value, min, max, s
 
 // Main Component
 const ModelPerformanceTracking: React.FC = () => {
-  const [selectedModel, setSelectedModel] = useState<string>('Model 1');
+  const [selectedModel, setSelectedModel] = useState<string>("Model 1");
   const [isDropdownOpen, setIsDropdownOpen] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  
+
   const [regularization, setRegularization] = useState<number>(0.01);
   const [maxIterations, setMaxIterations] = useState<number>(1000);
-  
+
   const [metrics, setMetrics] = useState<PerformanceMetrics>({
-    accuracy:   { value: 92.5, change: 0, isIncrease: true },
-    precision:  { value: 88.2, change: 0, isIncrease: true },
-    recall:     { value: 90.1, change: 0, isIncrease: true },
-    f1Score:    { value: 89.1, change: 0, isIncrease: true }
+    accuracy: { value: 92.5, change: 0, isIncrease: true },
+    precision: { value: 88.2, change: 0, isIncrease: true },
+    recall: { value: 90.1, change: 0, isIncrease: true },
+    f1Score: { value: 89.1, change: 0, isIncrease: true },
   });
 
-  const [trainingHistory, setTrainingHistory] = useState<TrainingHistoryPoint[]>([
-    { iteration: 1, f1Score: 89.1 }
-  ]);
+  const [trainingHistory, setTrainingHistory] = useState<
+    TrainingHistoryPoint[]
+  >([{ iteration: 1, f1Score: 89.1 }]);
 
   const confusionData: ConfusionMatrixData = {
     trueNeg: 1250,
     falsePos: 50,
     falseNeg: 80,
-    truePos: 850
+    truePos: 850,
   };
 
   const featureImportance: FeatureImportanceItem[] = [
-    { name: 'Stellar Radius', value: 0.92 },
-    { name: 'Transit Depth', value: 0.78 },
-    { name: 'Orbital Period', value: 0.65 },
-    { name: 'Planet Temp.', value: 0.47 }
+    { name: "Stellar Radius", value: 0.92 },
+    { name: "Transit Depth", value: 0.78 },
+    { name: "Orbital Period", value: 0.65 },
+    { name: "Planet Temp.", value: 0.47 },
   ];
 
   const handleApplyChanges = () => {
     setIsLoading(true);
   };
-    
-    {isLoading && (
-    <LoadingSpinner
-      onComplete={() => {
-      const prevMetrics = { ...metrics };
-      
-      const newMetrics: PerformanceMetrics = {
-        accuracy: {
-          value: Math.min(99, metrics.accuracy.value + 3),
-          change: 0,
-          isIncrease: true
-        },
-        precision: {
-          value: Math.min(99, metrics.precision.value + 3),
-          change: 0,
-          isIncrease: true
-        },
-        recall: {
-          value: Math.max(70, metrics.recall.value - 3),
-          change: 0,
-          isIncrease: false
-        },
-        f1Score: {
-          value: Math.min(99, metrics.f1Score.value + 3),
-          change: 0,
-          isIncrease: true
-        }
-      };
 
-      newMetrics.accuracy.change = ((newMetrics.accuracy.value - prevMetrics.accuracy.value) / prevMetrics.accuracy.value) * 100;
-      newMetrics.precision.change = ((newMetrics.precision.value - prevMetrics.precision.value) / prevMetrics.precision.value) * 100;
-      newMetrics.recall.change = ((newMetrics.recall.value - prevMetrics.recall.value) / prevMetrics.recall.value) * 100;
-      newMetrics.f1Score.change = ((newMetrics.f1Score.value - prevMetrics.f1Score.value) / prevMetrics.f1Score.value) * 100;
+  {
+    isLoading && (
+      <LoadingSpinner
+        onComplete={() => {
+          const prevMetrics = { ...metrics };
 
-      setMetrics(newMetrics);
-      
-      setTrainingHistory(prev => [
-        ...prev,
-        { iteration: prev.length + 1, f1Score: newMetrics.f1Score.value }
-      ]);
-      
-      setIsLoading(false);
-    }}
-  />
-)}
+          const newMetrics: PerformanceMetrics = {
+            accuracy: {
+              value: Math.min(99, metrics.accuracy.value + 3),
+              change: 0,
+              isIncrease: true,
+            },
+            precision: {
+              value: Math.min(99, metrics.precision.value + 3),
+              change: 0,
+              isIncrease: true,
+            },
+            recall: {
+              value: Math.max(70, metrics.recall.value - 3),
+              change: 0,
+              isIncrease: false,
+            },
+            f1Score: {
+              value: Math.min(99, metrics.f1Score.value + 3),
+              change: 0,
+              isIncrease: true,
+            },
+          };
+
+          newMetrics.accuracy.change =
+            ((newMetrics.accuracy.value - prevMetrics.accuracy.value) /
+              prevMetrics.accuracy.value) *
+            100;
+          newMetrics.precision.change =
+            ((newMetrics.precision.value - prevMetrics.precision.value) /
+              prevMetrics.precision.value) *
+            100;
+          newMetrics.recall.change =
+            ((newMetrics.recall.value - prevMetrics.recall.value) /
+              prevMetrics.recall.value) *
+            100;
+          newMetrics.f1Score.change =
+            ((newMetrics.f1Score.value - prevMetrics.f1Score.value) /
+              prevMetrics.f1Score.value) *
+            100;
+
+          setMetrics(newMetrics);
+
+          setTrainingHistory((prev) => [
+            ...prev,
+            { iteration: prev.length + 1, f1Score: newMetrics.f1Score.value },
+          ]);
+
+          setIsLoading(false);
+        }}
+      />
+    );
+  }
 
   const handleResetToDefault = () => {
     setRegularization(0);
@@ -452,12 +532,13 @@ const ModelPerformanceTracking: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen text-white pt-10" style={{ backgroundColor: '#101022' }}>
-      
+    <div
+      className="min-h-screen text-white pt-10"
+      style={{ backgroundColor: "#101022" }}
+    >
       <StyleInjector />
 
       {isLoading && <LoadingSpinner onComplete={() => setIsLoading(false)} />}
-      
 
       {/* Main Content */}
       <main className="max-w-7xl mx-auto px-6 py-12">
@@ -466,18 +547,26 @@ const ModelPerformanceTracking: React.FC = () => {
           <h1 className="text-4xl font-bold">Model Performance Tracking</h1>
         </div>
         <div className="flex items-start justify-between mb-8">
-          <p className="text-gray-400">Monitor and adjust the performance of the Exoplanet Classification AI model.</p>
+          <p className="text-gray-400">
+            Monitor and adjust the performance of the Exoplanet Classification
+            AI model.
+          </p>
           <div className="relative">
             <button
               onClick={() => setIsDropdownOpen(!isDropdownOpen)}
               className="flex items-center gap-2 px-4 py-2 bg-gray-800 border border-gray-700 rounded-lg hover:bg-gray-750 transition-colors"
             >
               <span className="text-white">{selectedModel}</span>
-              <ChevronDown size={16} className={`transition-transform ${isDropdownOpen ? 'rotate-180' : ''}`} />
+              <ChevronDown
+                size={16}
+                className={`transition-transform ${
+                  isDropdownOpen ? "rotate-180" : ""
+                }`}
+              />
             </button>
             {isDropdownOpen && (
               <div className="absolute top-full mt-2 right-0 bg-gray-800 border border-gray-700 rounded-lg overflow-hidden min-w-[140px] z-10">
-                {['Model 1', 'Model 2', 'Model 3'].map((model) => (
+                {["Model 1", "Model 2", "Model 3"].map((model) => (
                   <button
                     key={model}
                     onClick={() => {
@@ -547,7 +636,7 @@ const ModelPerformanceTracking: React.FC = () => {
               <button
                 onClick={handleApplyChanges}
                 className="px-6 py-3 rounded-lg font-medium transition-colors"
-                style={{ backgroundColor: '#0F0FBD' }}
+                style={{ backgroundColor: "#0F0FBD" }}
               >
                 Apply Changes
               </button>
