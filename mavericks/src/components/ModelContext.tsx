@@ -3,7 +3,7 @@ import React, { createContext, useContext, useState } from "react";
 import type { ReactNode } from "react";
 
 export interface ModelConfig {
-  model_type: "logistic_regression" | "knn";
+  model_type: "logistic_regression" | "knn" | "linear_regression";
   training_mode: "dynamic" | "static";
   hyperparameters?: string; // Add this optional property
 }

@@ -725,7 +725,6 @@ const ModelPerformanceTracking: React.FC = () => {
         </div>
 
         {/* Model Controls */}
-        {/* Model Controls */}
       <div>
         <h2 className="text-2xl font-bold mb-4">Model Controls</h2>
         <div className="bg-gray-900 rounded-xl p-8 border border-gray-800">
@@ -767,6 +766,26 @@ const ModelPerformanceTracking: React.FC = () => {
                   value={weights}
                   options={['uniform', 'distance']}
                   onChange={setWeights}
+                />
+              </div>
+            )}
+
+            {/* Linear Regression Controls */}
+            {selectedModel.model_type === 'linear_regression' && (
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-6">
+                <SliderControl
+                  label="Alpha (Regularization Strength)"
+                  value={alpha}
+                  min={0}
+                  max={1}
+                  step={0.01}
+                  onChange={setAlpha}
+                />
+                <DropdownControl
+                  label="Regularization Type"
+                  value={regularizationType}
+                  options={['L1 (Lasso)', 'L2 (Ridge)', 'ElasticNet']}
+                  onChange={setRegularizationType}
                 />
               </div>
             )}
