@@ -62,6 +62,7 @@ const ResearcherPage: React.FC = () => {
   const [selectedModel, setSelectedModel] = useState<ModelConfig | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [isTrainLoading, setIsTrainLoading] = useState(false);
   const [predictionResults, setPredictionResults] = useState<ExoplanetResult[]>(
     []
   );
@@ -157,12 +158,13 @@ const ResearcherPage: React.FC = () => {
       const results: ExoplanetResult[] =
         data.predictions?.map((pred: any, index: number) => ({
           starId: pred.star_id || `Star_${index + 1}`,
-          prediction: pred.prediction === 1 ? "Exoplanet" : "No Exoplanet",
+          prediction: pred.prediction === 'CONFIRMED' ? "Exoplanet" : "No Exoplanet",
           confidence: Math.round((pred.confidence || 0.5) * 100),
         })) || [];
 
       setPredictionResults(results);
       setHasPredicted(true);
+      console.log("Prediction results:", results);
       alert(
         `Prediction completed successfully! Processed ${results.length} stars.`
       );
@@ -199,7 +201,7 @@ const ResearcherPage: React.FC = () => {
       return;
     }
 
-    setIsLoading(true);
+    setIsTrainLoading(true);
     setTrainingStatus("Training model...");
 
     try {
@@ -242,7 +244,7 @@ const ResearcherPage: React.FC = () => {
         navigate("/model");
       }, 2000);
     } finally {
-      setIsLoading(false);
+      setIsTrainLoading(false);
     }
   };
 
@@ -275,12 +277,12 @@ const ResearcherPage: React.FC = () => {
             </button>
             <button
               onClick={handleTrainModel}
-              disabled={isLoading}
+              disabled={isTrainLoading}
               className="flex items-center gap-2 px-6 py-3 rounded-lg font-medium text-sm transition-all hover:opacity-90 disabled:opacity-50"
               style={{ backgroundColor: "#0F0FBD" }}
             >
               <Cpu size={20} />
-              {isLoading ? "Training..." : "Train from Dataset"}
+              {isTrainLoading ? "Training..." : "Train from Dataset"}
             </button>
           </div>
         </div>
