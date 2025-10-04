@@ -1,6 +1,7 @@
 //metricsDashboard.tsx
 import React, { useState, useEffect } from "react";
-import { TrendingUp, TrendingDown, ChevronDown } from "lucide-react";
+import { TrendingUp, TrendingDown, ChevronDown, ChevronsLeftRightEllipsis } from "lucide-react";
+import ModelModal from "../components/ModelModal";
 
 // Type Interfaces
 interface MetricData {
@@ -40,6 +41,12 @@ interface SliderControlProps {
   max: number;
   step: number;
   onChange: (value: number) => void;
+}
+
+interface ModelConfig {
+  model_type: string;
+  training_mode: "static" | "dynamic";
+  hyperparameters?: string;
 }
 
 interface LoadingSpinnerProps {
@@ -431,9 +438,14 @@ const SliderControl: React.FC<SliderControlProps> = ({
 
 // Main Component
 const ModelPerformanceTracking: React.FC = () => {
-  const [selectedModel, setSelectedModel] = useState<string>("Model 1");
+  const [selectedModel, setSelectedModel] = useState<ModelConfig>({
+  model_type: "logistic_regression",
+  training_mode: "dynamic"
+});
   const [isDropdownOpen, setIsDropdownOpen] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const [regularization, setRegularization] = useState<number>(0.01);
   const [maxIterations, setMaxIterations] = useState<number>(1000);
@@ -462,6 +474,18 @@ const ModelPerformanceTracking: React.FC = () => {
     { name: "Orbital Period", value: 0.65 },
     { name: "Planet Temp.", value: 0.47 },
   ];
+
+  const handleSelectModel = async (modelId: string) => {
+    // Convert string modelId to ModelConfig
+    const modelConfig: ModelConfig = {
+      model_type: modelId as "logistic_regression" | "knn",
+      training_mode: "dynamic", // Default to dynamic for training
+    };
+
+    console.log("Selected model:", modelConfig);
+    setSelectedModel(modelConfig);
+    setIsModalOpen(false);
+  };
 
   const handleApplyChanges = () => {
     setIsLoading(true);
@@ -552,34 +576,18 @@ const ModelPerformanceTracking: React.FC = () => {
             AI model.
           </p>
           <div className="relative">
+            
+            
             <button
-              onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-              className="flex items-center gap-2 px-4 py-2 bg-gray-800 border border-gray-700 rounded-lg hover:bg-gray-750 transition-colors"
+              onClick={() => setIsModalOpen(true)}
+              className="flex items-center gap-2 px-6 py-3 rounded-lg font-medium text-sm transition-all hover:opacity-90"
+              style={{ backgroundColor: "#0F0FBD" }}
             >
-              <span className="text-white">{selectedModel}</span>
-              <ChevronDown
-                size={16}
-                className={`transition-transform ${
-                  isDropdownOpen ? "rotate-180" : ""
-                }`}
-              />
+              <ChevronsLeftRightEllipsis size={20} />
+              {selectedModel
+                ? `Model: ${selectedModel.model_type}`
+                : "Select Model"}
             </button>
-            {isDropdownOpen && (
-              <div className="absolute top-full mt-2 right-0 bg-gray-800 border border-gray-700 rounded-lg overflow-hidden min-w-[140px] z-10">
-                {["Model 1", "Model 2", "Model 3"].map((model) => (
-                  <button
-                    key={model}
-                    onClick={() => {
-                      setSelectedModel(model);
-                      setIsDropdownOpen(false);
-                    }}
-                    className="w-full px-4 py-2 text-left text-white hover:bg-gray-700 transition-colors"
-                  >
-                    {model}
-                  </button>
-                ))}
-              </div>
-            )}
           </div>
         </div>
 
@@ -608,24 +616,68 @@ const ModelPerformanceTracking: React.FC = () => {
         <div>
           <h2 className="text-2xl font-bold mb-4">Model Controls</h2>
           <div className="bg-gray-900 rounded-xl p-8 border border-gray-800">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-6">
-              <SliderControl
-                label="Regularization Strength"
-                value={regularization}
-                min={0}
-                max={1}
-                step={0.01}
-                onChange={setRegularization}
-              />
-              <SliderControl
-                label="Max Iterations"
-                value={maxIterations}
-                min={0}
-                max={1000}
-                step={10}
-                onChange={setMaxIterations}
-              />
-            </div>
+              {selectedModel.model_type === "logistic_regression" && (
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-6">
+                  <SliderControl
+                  label="Regularization Strength"
+                  value={regularization}
+                  min={0}
+                  max={1}
+                  step={0.01}
+                  onChange={setRegularization}
+                />
+                <SliderControl
+                  label="Max Iterations"
+                  value={maxIterations}
+                  min={0}
+                  max={1000}
+                  step={10}
+                  onChange={setMaxIterations}
+                />
+                </div>
+              )}
+              {selectedModel.model_type === "knn" && (
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-6">
+                  <SliderControl
+                  label="Regularization Strength"
+                  value={regularization}
+                  min={0}
+                  max={1}
+                  step={0.01}
+                  onChange={setRegularization}
+                />
+                <SliderControl
+                  label="Max Iterations"
+                  value={maxIterations}
+                  min={0}
+                  max={1000}
+                  step={10}
+                  onChange={setMaxIterations}
+                />
+                </div>
+              )}
+              {selectedModel.model_type === "linear_regression" && (
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-6">
+                  <SliderControl
+                  label=" Strength"
+                  value={regularization}
+                  min={0}
+                  max={1}
+                  step={0.01}
+                  onChange={setRegularization}
+                />
+                <SliderControl
+                  label="Max Iterations"
+                  value={maxIterations}
+                  min={0}
+                  max={1000}
+                  step={10}
+                  onChange={setMaxIterations}
+                />
+                </div>
+              )}
+              
+            
             <div className="flex justify-end gap-4">
               <button
                 onClick={handleResetToDefault}
@@ -668,6 +720,14 @@ const ModelPerformanceTracking: React.FC = () => {
         }
 
       `}</style>
+
+        <ModelModal
+          isOpen={isModalOpen}
+          onClose={() => setIsModalOpen(false)}
+          onSelectModel={handleSelectModel}
+          isLoading={isLoading}
+        />
+
     </div>
   );
 };

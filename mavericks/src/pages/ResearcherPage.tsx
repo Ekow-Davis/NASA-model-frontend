@@ -11,6 +11,14 @@ import {
 } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import ModelModal from "../components/ModelModal";
+import DataColumnsTable from "../components/uploadTableRequirements";
+
+interface ColumnData {
+  id: number;
+  name: string;
+  isRequired: boolean;
+  description?: string;
+}
 
 interface UploadedFile {
   name: string;
@@ -69,6 +77,57 @@ const ResearcherPage: React.FC = () => {
   const [trainingStatus, setTrainingStatus] = useState<string>("");
   const [hasPredicted, setHasPredicted] = useState(false);
   const navigate = useNavigate();
+
+  const sampleColumns: ColumnData[] = [
+    {
+      id: 1,
+      name: 'koi_disposition',
+      isRequired: true,
+      description: 'The disposition in the literature towards this exoplanet candidate'
+    },
+    {
+      id: 2,
+      name: 'koi_fpflag_nt',
+      isRequired: true,
+      description: 'Not transit-like false positive flag'
+    },
+    {
+      id: 3,
+      name: 'koi_fpflag_ss',
+      isRequired: false,
+      description: 'Stellar eclipse false positive flag'
+    },
+    {
+      id: 4,
+      name: 'koi_fpflag_co',
+      isRequired: true,
+      description: 'Centroid offset false positive flag'
+    },
+    {
+      id: 5,
+      name: 'koi_fpflag_ec',
+      isRequired: false,
+      description: 'Ephemeris match indicates contamination'
+    },
+    {
+      id: 6,
+      name: 'koi_period',
+      isRequired: true,
+      description: 'Orbital period of the planet candidate'
+    },
+    {
+      id: 7,
+      name: 'koi_time0bk',
+      isRequired: false,
+      description: 'Transit epoch'
+    },
+    {
+      id: 8,
+      name: 'koi_impact',
+      isRequired: true,
+      description: 'Impact parameter of the planet candidate'
+    }
+  ];  
 
   const API_BASE_URL = "https://nasa-ml-exoplanets-0xcz.onrender.com";
 
@@ -232,6 +291,7 @@ const ResearcherPage: React.FC = () => {
     }
   };
 
+
   return (
     <div
       className="min-h-screen text-white pt-10"
@@ -334,6 +394,21 @@ const ResearcherPage: React.FC = () => {
             {isLoading ? "Predicting..." : "Predict"}
           </button>
         </div>
+
+        <div className="min-h-screen p-8" style={{ backgroundColor: '#101022' }}>
+         <div className="max-w-7xl mx-auto">
+         <div className="mb-8">
+           <h1 className="text-white text-3xl font-bold mb-2">Data Columns</h1>
+           <p className="text-gray-400">Overview of the dataset column structure and requirements</p>
+         </div>
+        
+         <DataColumnsTable columns={sampleColumns} />
+        
+         <div className="mt-6 text-gray-400 text-sm">
+           <p>Showing {sampleColumns.length} columns</p>
+         </div>
+       </div>
+     </div>
 
         {/* Results Table - Only show after prediction */}
         {hasPredicted && predictionResults.length > 0 && (
