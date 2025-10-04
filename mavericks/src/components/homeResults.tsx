@@ -1,6 +1,5 @@
 // components/homeResults.tsx
 import { Search, CircleX } from "lucide-react";
-
 interface PredictionResult {
   prediction: "CONFIRMED" | "FALSE POSITIVE";
   confidence: number;
