@@ -43,6 +43,13 @@ interface SliderControlProps {
   onChange: (value: number) => void;
 }
 
+interface DropdownControlProps {
+  label: string;
+  value: string;
+  options: string[];
+  onChange: (value: string) => void;
+}
+
 interface ModelConfig {
   model_type: string;
   training_mode: "static" | "dynamic";
@@ -442,12 +449,23 @@ const ModelPerformanceTracking: React.FC = () => {
   model_type: "logistic_regression",
   training_mode: "dynamic"
 });
-  const [isDropdownOpen, setIsDropdownOpen] = useState<boolean>(false);
+  // Logistic Regression controls
+  const [cValue, setCValue] = useState<number>(0.5);
+  const [penalty, setPenalty] = useState<string>('l2');
+  
+  // Linear Regression controls
+  const [alpha, setAlpha] = useState<number>(0.5);
+  const [regularizationType, setRegularizationType] = useState<string>('L2 (Ridge)');
+  
+  // KNN controls
+  const [nNeighbors, setNNeighbors] = useState<number>(3);
+  const [weights, setWeights] = useState<string>('uniform');
+
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const [regularization, setRegularization] = useState<number>(0.01);
+  // const [regularization, setRegularization] = useState<number>(0.01);
   const [maxIterations, setMaxIterations] = useState<number>(1000);
 
   const [metrics, setMetrics] = useState<PerformanceMetrics>({
@@ -550,9 +568,38 @@ const ModelPerformanceTracking: React.FC = () => {
     );
   }
 
+  // Dropdown Control Component
+  const DropdownControl: React.FC<DropdownControlProps> = ({ label, value, options, onChange }) => {
+    return (
+      <div className="space-y-3">
+        <label className="text-white font-medium block">{label}</label>
+        <select
+          value={value}
+          onChange={(e) => onChange(e.target.value)}
+          className="w-full bg-gray-800 text-white px-4 py-2 rounded border border-gray-700 focus:outline-none focus:border-blue-600"
+        >
+          {options.map((option) => (
+            <option key={option} value={option}>
+              {option}
+            </option>
+          ))}
+        </select>
+      </div>
+    );
+  };
+
   const handleResetToDefault = () => {
-    setRegularization(0);
-    setMaxIterations(0);
+    // Reset based on model type
+    if (selectedModel.model_type === 'logistic_regression') {
+      setCValue(0);
+      setPenalty('l2');
+    } else if (selectedModel.model_type === 'linear_regression') {
+      setAlpha(0);
+      setRegularizationType('L2 (Ridge)');
+    } else if (selectedModel.model_type === 'knn') {
+      setNNeighbors(2);
+      setWeights('uniform');
+    }
   };
 
   return (
@@ -616,66 +663,65 @@ const ModelPerformanceTracking: React.FC = () => {
         <div>
           <h2 className="text-2xl font-bold mb-4">Model Controls</h2>
           <div className="bg-gray-900 rounded-xl p-8 border border-gray-800">
-              {selectedModel.model_type === "logistic_regression" && (
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-6">
-                  <SliderControl
-                  label="Regularization Strength"
-                  value={regularization}
+              {/* Logistic Regression Controls */}
+            {selectedModel.model_type === 'logistic_regression' && (
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-6">
+                <SliderControl
+                  label="C (Inverse of Regularization Strength)"
+                  value={cValue}
                   min={0}
                   max={1}
                   step={0.01}
-                  onChange={setRegularization}
+                  onChange={setCValue}
                 />
+                <DropdownControl
+                  label="Penalty (Type of Regularization)"
+                  value={penalty}
+                  options={['l1', 'l2', 'elasticnet', 'none']}
+                  onChange={setPenalty}
+                />
+              </div>
+            )}
+
+            {/* Linear Regression Controls */}
+            {selectedModel.model_type === 'linear_regression' && (
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-6">
                 <SliderControl
-                  label="Max Iterations"
-                  value={maxIterations}
-                  min={0}
-                  max={1000}
-                  step={10}
-                  onChange={setMaxIterations}
-                />
-                </div>
-              )}
-              {selectedModel.model_type === "knn" && (
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-6">
-                  <SliderControl
-                  label="Regularization Strength"
-                  value={regularization}
+                  label="Alpha (Regularization Strength)"
+                  value={alpha}
                   min={0}
                   max={1}
                   step={0.01}
-                  onChange={setRegularization}
+                  onChange={setAlpha}
                 />
+                <DropdownControl
+                  label="Type of Regularization"
+                  value={regularizationType}
+                  options={['L1 (Lasso)', 'L2 (Ridge)', 'Elastic Net']}
+                  onChange={setRegularizationType}
+                />
+              </div>
+            )}
+
+            {/* KNN Controls */}
+            {selectedModel.model_type === 'knn' && (
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-6">
                 <SliderControl
-                  label="Max Iterations"
-                  value={maxIterations}
-                  min={0}
-                  max={1000}
-                  step={10}
-                  onChange={setMaxIterations}
+                  label="N Neighbors (k)"
+                  value={nNeighbors}
+                  min={2}
+                  max={5}
+                  step={1}
+                  onChange={setNNeighbors}
                 />
-                </div>
-              )}
-              {selectedModel.model_type === "linear_regression" && (
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-6">
-                  <SliderControl
-                  label=" Strength"
-                  value={regularization}
-                  min={0}
-                  max={1}
-                  step={0.01}
-                  onChange={setRegularization}
+                <DropdownControl
+                  label="Weights (How to weight neighbors)"
+                  value={weights}
+                  options={['uniform', 'distance']}
+                  onChange={setWeights}
                 />
-                <SliderControl
-                  label="Max Iterations"
-                  value={maxIterations}
-                  min={0}
-                  max={1000}
-                  step={10}
-                  onChange={setMaxIterations}
-                />
-                </div>
-              )}
+              </div>
+            )}
               
             
             <div className="flex justify-end gap-4">
