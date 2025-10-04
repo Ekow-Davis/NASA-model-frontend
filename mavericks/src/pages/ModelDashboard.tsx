@@ -699,7 +699,7 @@ const ModelPerformanceTracking: React.FC = () => {
                 ? `Model: ${selectedModel.model_type}`
                 : "Select Model"}
             </button>
-            {uploadedFile ? <p>Uploaded File: {uploadedFile.name}</p> : <p>No file uploaded</p>}
+            {uploadedFile ? <p className="p-1">Uploaded File: {uploadedFile.name}</p> : <p className="m-1">No file uploaded</p>}
           </div>
         </div>
 
