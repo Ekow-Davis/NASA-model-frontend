@@ -64,12 +64,12 @@ export default function Navbar() {
         >
           researcher
         </Link>
-        <Link
+        {/* <Link
           to="/model"
           className="hover:text-gray-300 cursor-pointer py-2 md:py-0"
         >
           model
-        </Link>
+        </Link> */}
       </ul>
 
       {/* Planet + NASA */}
