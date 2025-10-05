@@ -20,10 +20,10 @@ interface PerformanceMetrics {
 }
 
 interface ConfusionMatrixData {
-  trueNeg: number;
-  falsePos: number;
-  falseNeg: number;
-  truePos: number;
+  tn: number;
+  fp: number;
+  fn: number;
+  tp: number;
 }
 
 interface FeatureImportanceItem {
@@ -207,9 +207,9 @@ const MetricCard: React.FC<{ title: string; metric: MetricData }> = ({
 // Confusion Matrix Component
 const ConfusionMatrix: React.FC<{ data: ConfusionMatrixData }> = ({ data }) => {
   const getColor = (value: number) => {
-    if (value >= 1000) return "#0F0FBD";
-    if (value >= 500) return "#141483";
-    if (value >= 100) return "#171767";
+    if (value >= 100) return "#0F0FBD";
+    if (value >= 200) return "#141483";
+    if (value >= 50) return "#171767";
     return "#19194A";
   };
 
@@ -221,30 +221,30 @@ const ConfusionMatrix: React.FC<{ data: ConfusionMatrixData }> = ({ data }) => {
       <div className="grid grid-cols-2 gap-4">
         <div
           className="rounded-lg p-6 flex flex-col items-center justify-center"
-          style={{ backgroundColor: getColor(data.trueNeg) }}
+          style={{ backgroundColor: getColor(data.tn) }}
         >
-          <p className="text-white text-4xl font-bold mb-1">{data.trueNeg}</p>
+          <p className="text-white text-4xl font-bold mb-1">{data.tn}</p>
           <p className="text-gray-300 text-sm">True Neg</p>
         </div>
         <div
           className="rounded-lg p-6 flex flex-col items-center justify-center"
-          style={{ backgroundColor: getColor(data.falsePos) }}
+          style={{ backgroundColor: getColor(data.fp) }}
         >
-          <p className="text-white text-4xl font-bold mb-1">{data.falsePos}</p>
+          <p className="text-white text-4xl font-bold mb-1">{data.fp}</p>
           <p className="text-gray-300 text-sm">False Pos</p>
         </div>
         <div
           className="rounded-lg p-6 flex flex-col items-center justify-center"
-          style={{ backgroundColor: getColor(data.falseNeg) }}
+          style={{ backgroundColor: getColor(data.fn) }}
         >
-          <p className="text-white text-4xl font-bold mb-1">{data.falseNeg}</p>
+          <p className="text-white text-4xl font-bold mb-1">{data.fn}</p>
           <p className="text-gray-300 text-sm">False Neg</p>
         </div>
         <div
           className="rounded-lg p-6 flex flex-col items-center justify-center"
-          style={{ backgroundColor: getColor(data.truePos) }}
+          style={{ backgroundColor: getColor(data.tp) }}
         >
-          <p className="text-white text-4xl font-bold mb-1">{data.truePos}</p>
+          <p className="text-white text-4xl font-bold mb-1">{data.tp}</p>
           <p className="text-gray-300 text-sm">True Pos</p>
         </div>
       </div>
@@ -468,7 +468,6 @@ const ModelPerformanceTracking: React.FC = () => {
 
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  
   const { selectedModel, setSelectedModel, uploadedFile } = useModelContext();
 
   const { metrics: ctxMetrics, setMetrics: setCtxMetrics } = useModelContext();
@@ -486,12 +485,12 @@ const ModelPerformanceTracking: React.FC = () => {
     TrainingHistoryPoint[]
   >([{ iteration: 1, f1Score: 89.1 }]);
 
-  const confusionData: ConfusionMatrixData = {
-    trueNeg: 1250,
-    falsePos: 50,
-    falseNeg: 80,
-    truePos: 850,
-  };
+  const [confusionData, setConfusionData] = useState<ConfusionMatrixData>({
+    tn: 1250,
+    fp: 50,
+    fn: 80,
+    tp: 850,
+  });
 
   const featureImportance: FeatureImportanceItem[] = [
     { name: "Stellar Radius", value: 0.92 },
@@ -601,6 +600,10 @@ const ModelPerformanceTracking: React.FC = () => {
           },
         };
 
+        if (result.confusion_matrix) {
+          setConfusionData(result.confusion_matrix);
+        }
+
         setMetrics(newMetrics);
         // also persist to global context so other pages can read
         try {
@@ -616,6 +619,7 @@ const ModelPerformanceTracking: React.FC = () => {
         ]);
 
         alert(result.message || "Training completed");
+        console.log("Training result:", result);
       } else {
         alert("Training completed but no metrics returned.");
       }

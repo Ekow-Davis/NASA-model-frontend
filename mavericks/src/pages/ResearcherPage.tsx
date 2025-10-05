@@ -88,7 +88,7 @@ const ResearcherPage: React.FC = () => {
       id: 1,
       name: 'koi_disposition',
       isRequired: true,
-      description: 'The disposition in the literature towards this exoplanet candidate'
+      description: 'The disposition in the literature towards this exoplanet candidate. Needed for Training'
     },
     {
       id: 2,
