@@ -8,6 +8,19 @@ export interface ModelConfig {
   hyperparameters?: string; // Add this optional property
 }
 
+export interface MetricData {
+  value: number;
+  change?: number;
+  isIncrease?: boolean;
+}
+
+export interface PerformanceMetrics {
+  accuracy: MetricData;
+  precision: MetricData;
+  recall: MetricData;
+  f1Score: MetricData;
+}
+
 interface UploadedFile {
   name: string;
   file: File;
@@ -20,6 +33,8 @@ interface ModelContextType {
   uploadedFile: UploadedFile | null;
   setUploadedFile: (file: UploadedFile | null) => void;
   clearAll: () => void; // reset when going back to /researcher
+  metrics: PerformanceMetrics | null;
+  setMetrics: (m: PerformanceMetrics | null) => void;
 }
 
 const ModelContext = createContext<ModelContextType | undefined>(undefined);
@@ -33,6 +48,7 @@ export const useModelContext = () => {
 export const ModelProvider = ({ children }: { children: ReactNode }) => {
   const [selectedModel, setSelectedModel] = useState<ModelConfig | null>(null);
   const [uploadedFile, setUploadedFile] = useState<UploadedFile | null>(null);
+  const [metrics, setMetrics] = useState<PerformanceMetrics | null>(null);
 
   const clearAll = () => {
     setSelectedModel(null);
@@ -41,7 +57,7 @@ export const ModelProvider = ({ children }: { children: ReactNode }) => {
 
   return (
     <ModelContext.Provider
-      value={{ selectedModel, setSelectedModel, uploadedFile, setUploadedFile, clearAll }}
+      value={{ selectedModel, setSelectedModel, uploadedFile, setUploadedFile, clearAll, metrics, setMetrics }}
     >
       {children}
     </ModelContext.Provider>

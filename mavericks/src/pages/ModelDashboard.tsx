@@ -471,12 +471,16 @@ const ModelPerformanceTracking: React.FC = () => {
   
   const { selectedModel, setSelectedModel, uploadedFile } = useModelContext();
 
-  const [metrics, setMetrics] = useState<PerformanceMetrics>({
-    accuracy: { value: 92.5, change: 0, isIncrease: true },
-    precision: { value: 88.2, change: 0, isIncrease: true },
-    recall: { value: 90.1, change: 0, isIncrease: true },
-    f1Score: { value: 89.1, change: 0, isIncrease: true },
-  });
+  const { metrics: ctxMetrics, setMetrics: setCtxMetrics } = useModelContext();
+
+  const [metrics, setMetrics] = useState<PerformanceMetrics>(
+    ctxMetrics ?? {
+      accuracy: { value: 92.5, change: 0, isIncrease: true },
+      precision: { value: 88.2, change: 0, isIncrease: true },
+      recall: { value: 90.1, change: 0, isIncrease: true },
+      f1Score: { value: 89.1, change: 0, isIncrease: true },
+    }
+  );
 
   const [trainingHistory, setTrainingHistory] = useState<
     TrainingHistoryPoint[]
@@ -528,49 +532,100 @@ const ModelPerformanceTracking: React.FC = () => {
 
 
   const handleApplyChanges = () => {
-  setIsLoading(true);
-  
-  // Simulate processing time
-  setTimeout(() => {
-    const prevMetrics = { ...metrics };
+  (async () => {
+    setIsLoading(true);
 
-    const newMetrics: PerformanceMetrics = {
-      accuracy: {
-        value: Math.min(99, metrics.accuracy.value + 3),
-        change: 0,
-        isIncrease: true,
-      },
-      precision: {
-        value: Math.min(99, metrics.precision.value + 3),
-        change: 0,
-        isIncrease: true,
-      },
-      recall: {
-        value: Math.max(70, metrics.recall.value - 3),
-        change: 0,
-        isIncrease: false,
-      },
-      f1Score: {
-        value: Math.min(99, metrics.f1Score.value + 3),
-        change: 0,
-        isIncrease: true,
-      },
-    };
+    const API_BASE_URL = "https://nasa-ml-exoplanets-0xcz.onrender.com";
 
-    // Calculate changes
-    newMetrics.accuracy.change = ((newMetrics.accuracy.value - prevMetrics.accuracy.value) / prevMetrics.accuracy.value) * 100;
-    newMetrics.precision.change = ((newMetrics.precision.value - prevMetrics.precision.value) / prevMetrics.precision.value) * 100;
-    newMetrics.recall.change = ((newMetrics.recall.value - prevMetrics.recall.value) / prevMetrics.recall.value) * 100;
-    newMetrics.f1Score.change = ((newMetrics.f1Score.value - prevMetrics.f1Score.value) / prevMetrics.f1Score.value) * 100;
+    try {
+      const formData = new FormData();
+      formData.append("model_type", selectedModel?.model_type || "logistic_regression");
+      formData.append("training_mode", selectedModel?.training_mode || "dynamic");
 
-    setMetrics(newMetrics);
-    setTrainingHistory((prev) => [
-      ...prev,
-      { iteration: prev.length + 1, f1Score: newMetrics.f1Score.value },
-    ]);
+      // Append hyperparameters based on selected model
+      if (selectedModel?.model_type === "logistic_regression") {
+        formData.append("c_value", cValue.toString());
+        formData.append("penalty", penalty);
+      } else if (selectedModel?.model_type === "knn") {
+        formData.append("n_neighbors", nNeighbors.toString());
+        formData.append("weights", weights);
+      } else if (selectedModel?.model_type === "linear_regression") {
+        formData.append("alpha", alpha.toString());
+        formData.append("regularization_type", regularizationType);
+      }
 
-    setIsLoading(false);
-  }, 2000);
+      // If a file has been uploaded in the context, attach it. Otherwise use Kepler dataset flag.
+      if (uploadedFile && uploadedFile.file) {
+        formData.append("file", uploadedFile.file);
+      } else {
+        formData.append("use_kepler_dataset", "true");
+      }
+
+      const resp = await fetch(`${API_BASE_URL}/train`, {
+        method: "POST",
+        body: formData,
+      });
+
+      if (!resp.ok) {
+        const txt = await resp.text();
+        console.error("Train API error:", resp.status, txt);
+        alert(`Training failed: ${resp.status}`);
+        return;
+      }
+
+      const result = await resp.json();
+
+      // Map backend metrics shape into frontend state
+      if (result.metrics) {
+        const m = result.metrics;
+        const newMetrics: PerformanceMetrics = {
+          accuracy: {
+            value: m.accuracy?.value ?? metrics.accuracy.value,
+            change: m.accuracy?.change ?? 0,
+            isIncrease: m.accuracy?.isIncrease ?? true,
+          },
+          precision: {
+            value: m.precision?.value ?? metrics.precision.value,
+            change: m.precision?.change ?? 0,
+            isIncrease: m.precision?.isIncrease ?? true,
+          },
+          recall: {
+            value: m.recall?.value ?? metrics.recall.value,
+            change: m.recall?.change ?? 0,
+            isIncrease: m.recall?.isIncrease ?? true,
+          },
+          f1Score: {
+            value: m.f1Score?.value ?? metrics.f1Score.value,
+            change: m.f1Score?.change ?? 0,
+            isIncrease: m.f1Score?.isIncrease ?? true,
+          },
+        };
+
+        setMetrics(newMetrics);
+        // also persist to global context so other pages can read
+        try {
+          setCtxMetrics?.(newMetrics);
+        } catch (e) {
+          // ignore if not provided
+        }
+
+        // push training history point using f1
+        setTrainingHistory((prev) => [
+          ...prev,
+          { iteration: prev.length + 1, f1Score: newMetrics.f1Score.value },
+        ]);
+
+        alert(result.message || "Training completed");
+      } else {
+        alert("Training completed but no metrics returned.");
+      }
+    } catch (err) {
+      console.error("Error during training:", err);
+      alert("An error occurred while training. See console for details.");
+    } finally {
+      setIsLoading(false);
+    }
+  })();
 };
 
   {

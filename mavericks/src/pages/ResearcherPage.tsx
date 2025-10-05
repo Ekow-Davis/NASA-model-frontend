@@ -79,7 +79,7 @@ const ResearcherPage: React.FC = () => {
   const [trainingStatus, setTrainingStatus] = useState<string>("");
   const [hasPredicted, setHasPredicted] = useState(false);
 
-  const { selectedModel, setSelectedModel, uploadedFile, setUploadedFile, clearAll } = useModelContext();
+  const { selectedModel, setSelectedModel, uploadedFile, setUploadedFile, clearAll, setMetrics } = useModelContext();
 
   const navigate = useNavigate();
 
@@ -275,11 +275,16 @@ const ResearcherPage: React.FC = () => {
 
       const data = await response.json();
       setTrainingStatus("Training completed successfully!");
-      alert(
-        `Model ${selectedModel.model_type} training completed! Accuracy: ${
-          data.accuracy || "N/A"
-        }`
-      );
+      // persist metrics into context if available
+      if (setMetrics && data.metrics) {
+        try {
+          setMetrics(data.metrics);
+        } catch (e) {
+          // ignore
+        }
+      }
+
+      alert(`Model ${selectedModel.model_type} training completed!`);
 
       navigate("/model");
     } catch (error) {
@@ -297,7 +302,7 @@ const ResearcherPage: React.FC = () => {
       setIsTrainLoading(false);
     }
   };
-
+// NOTE: Training with hyperparameters is handled in the ModelDashboard page.
   React.useEffect(() => {
     clearAll();
   }, []);
